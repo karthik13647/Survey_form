@@ -8,49 +8,39 @@
   <style>
     .card {
       margin-top: 170px;
-      box-shadow: 0 4px 8px rgba(0,0,0,0.5 );
-    border: none;
-  border-radius: 10px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.5);
+      border: none;
+      border-radius: 10px;
     }
     body {
-  background-color: #f0f2f5;
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  
-}
-h3{
-    font-size: 30px;
-}
-
-.card-title {
-  font-weight: bold;
-  color: #333;
-}
-
-.btn {
-  font-size: 1.1rem;
-  padding: 10px;
-  border-radius: 15px;
-}
-
-.alert {
-  font-size: 1.1rem;
-}
-
+      background-color: #f0f2f5;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+    h3 {
+      font-size: 30px;
+    }
+    .card-title {
+      font-weight: bold;
+      color: #333;
+    }
+    .alert {
+      font-size: 1.1rem;
+    }
   </style>
 </head>
 <body>
   <div class="container">
     <div class="card mx-auto" style="max-width: 500px;">
-      <div class="card-body">
-        <h3 class="card-title text-center mb-3">Welcome to Our Survey</h3>
-        <p class="text-center">Please select your gender:</p>
+      <div class="card-body text-center">
+        <h3 class="card-title mb-3">Welcome to Our Survey</h3>
+        <p>Please select your gender:</p>
         <div class="d-grid gap-2">
           <button class="btn btn-primary" onclick="selectGender('male')">Male</button>
           <button class="btn btn-danger" onclick="selectGender('female')">Female</button>
           <button class="btn btn-warning" onclick="selectGender('teen_female')">Teen Female</button>
           <button class="btn btn-info" onclick="selectGender('old_female')">Old Female</button>
         </div>
-        <div id="response" class="mt-4 text-center"></div>
+        <div id="response" class="mt-4"></div>
       </div>
     </div>
   </div>
@@ -64,7 +54,12 @@ h3{
       })
       .then(response => response.json())
       .then(data => {
-        document.getElementById("response").innerHTML = `<div class="alert alert-info">${data.message}</div>`;
+        // For non-male responses, the backend returns a redirect URL
+        if(data.redirect){
+          window.location.href = data.redirect;
+        } else {
+          document.getElementById("response").innerHTML = `<div class="alert alert-info">${data.message}</div>`;
+        }
       })
       .catch(error => {
         console.error('Error:', error);
