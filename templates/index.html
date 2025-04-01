@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Dynamic Survey</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <style>
+    .card {
+      margin-top: 170px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.5 );
+    border: none;
+  border-radius: 10px;
+    }
+    body {
+  background-color: #f0f2f5;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  
+}
+h3{
+    font-size: 30px;
+}
+
+.card-title {
+  font-weight: bold;
+  color: #333;
+}
+
+.btn {
+  font-size: 1.1rem;
+  padding: 10px;
+  border-radius: 15px;
+}
+
+.alert {
+  font-size: 1.1rem;
+}
+
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="card mx-auto" style="max-width: 500px;">
+      <div class="card-body">
+        <h3 class="card-title text-center mb-3">Welcome to Our Survey</h3>
+        <p class="text-center">Please select your gender:</p>
+        <div class="d-grid gap-2">
+          <button class="btn btn-primary" onclick="selectGender('male')">Male</button>
+          <button class="btn btn-danger" onclick="selectGender('female')">Female</button>
+          <button class="btn btn-warning" onclick="selectGender('teen_female')">Teen Female</button>
+          <button class="btn btn-info" onclick="selectGender('old_female')">Old Female</button>
+        </div>
+        <div id="response" class="mt-4 text-center"></div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    function selectGender(gender) {
+      fetch('/survey', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ gender: gender })
+      })
+      .then(response => response.json())
+      .then(data => {
+        document.getElementById("response").innerHTML = `<div class="alert alert-info">${data.message}</div>`;
+      })
+      .catch(error => {
+        console.error('Error:', error);
+        document.getElementById("response").innerHTML = `<div class="alert alert-danger">An error occurred. Please try again later.</div>`;
+      });
+    }
+  </script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
