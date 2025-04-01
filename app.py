@@ -35,6 +35,16 @@ def update_day_response(record_id, day_response):
         cursor.execute("UPDATE responses SET day_response=? WHERE id=?", (day_response, record_id))
         conn.commit()
 
+def get_gender(record_id):
+    """Retrieve the gender for the given record ID."""
+    with sqlite3.connect(DATABASE) as conn:
+        cursor = conn.cursor()
+        cursor.execute("SELECT gender FROM responses WHERE id=?", (record_id,))
+        row = cursor.fetchone()
+        if row:
+            return row[0].lower()
+        return None
+
 def get_survey_response(gender):
     """Return a dynamic message based on the selected gender."""
     if gender == "male":
@@ -76,9 +86,10 @@ def survey():
 @app.route('/day', methods=['GET', 'POST'])
 def day():
     if request.method == 'GET':
-        # Display the follow-up question page with the record id
+        # Display the follow-up question page with the record id and gender
         record_id = request.args.get("rid")
-        return render_template('day.html', record_id=record_id)
+        gender = get_gender(record_id)
+        return render_template('day.html', record_id=record_id, gender=gender)
     else:
         # Process the day response submission
         record_id = request.form.get("record_id")
